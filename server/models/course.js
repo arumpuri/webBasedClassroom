@@ -2,44 +2,51 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const LessonSchema = new Schema({
-  title: String,
-  content: String,
-  resource_url: String
-}, { timestamps: true })
-const Lesson = mongoose.model('Lesson', LessonSchema)
-
-const CourseSchema = new Schema(
-  {
-    name: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    description: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    image: {
-      type: Buffer,
-      contentType: String,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    published: {
-      type: Boolean,
-      default: false,
-    },
-    educator: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
-    lessons: [LessonSchema],
+const CourseSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  { timestamps: true }
-);
+  description: {
+    type: String,
+    required: true,
+  },
+  instructor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  modules: [
+    {
+      title: { type: String, required: true },
+      lessons: [
+        {
+          title: { type: String, required: true },
+          content: { type: String, required: true },
+          videoUrl: { type: String },
+          quiz: [
+            {
+              question: String,
+              options: [String],
+              correctOption: Number,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  price: {
+    type: Number,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-module.exports = mongoose.model("Course", CourseSchema);
+const Course = mongoose.model('Course', CourseSchema);
+
+module.exports = Course;
+
