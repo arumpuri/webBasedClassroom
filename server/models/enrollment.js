@@ -1,17 +1,33 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose');
 
 const EnrollmentSchema = new mongoose.Schema({
-  course: {type: mongoose.Schema.ObjectId, ref: 'Course'},
-  updated: Date,
-  enrolled: {
-    type: Date,
-    default: Date.now
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
-  student: {type: mongoose.Schema.ObjectId, ref: 'User'},
-  lessonStatus: [{
-      lesson: {type: mongoose.Schema.ObjectId, ref: 'Lesson'}, 
-      complete: Boolean}],
-  completed: Date
-})
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    required: true,
+  },
+  enrolledAt: {
+    type: Date,
+    default: Date.now,
+  },
+  progress: {
+    moduleIndex: { type: Number, default: 0 },
+    lessonIndex: { type: Number, default: 0 },
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+  certificateUrl: {
+    type: String,
+  },
+});
 
-export default mongoose.model('Enrollment', EnrollmentSchema)
+const Enrollment = mongoose.model('Enrollment', EnrollmentSchema);
+
+module.exports = Enrollment;
